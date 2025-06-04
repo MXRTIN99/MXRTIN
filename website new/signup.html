@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #ecf0f1;
+      display: flex;
+      height: 100vh;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .signup-box {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    input[type="text"], input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #27ae60;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2ecc71;
+    }
+
+    #success {
+      color: green;
+      text-align: center;
+    }
+    #error {
+      color: red;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="signup-box">
+    <h2>Sign Up</h2>
+   <form onsubmit="return registerUser()">
+  <input type="text" id="newUsername" placeholder="Create Username" required>
+  <input type="email" id="newEmail" placeholder="Enter Email" required>
+  <input type="password" id="newPassword" placeholder="Create Password" required>
+  <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+  <button type="submit">Register</button>
+</form>
+<p id="success"></p>
+<p id="error"></p>
+<p style="text-align:center;">Already registered? <a href="login.html">Login here</a></p>
+
+ <script>
+  function registerUser() {
+  const username = document.getElementById("newUsername").value;
+  const email = document.getElementById("newEmail").value;
+  const password = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  let users = JSON.parse(localStorage.getItem("users")) || [];
+
+  // Check if username already exists
+  const userExists = users.some(user => user.username === username);
+  if (userExists) {
+    document.getElementById("error").innerText = "Username already taken!";
+    document.getElementById("success").innerText = "";
+    return false;
+  }
+
+  // Check if email already exists (optional)
+  const emailExists = users.some(user => user.email === email);
+  if (emailExists) {
+    document.getElementById("error").innerText = "Email already registered!";
+    document.getElementById("success").innerText = "";
+    return false;
+  }
+
+  // Check if passwords match
+  if (password !== confirmPassword) {
+    document.getElementById("error").innerText = "Passwords do not match!";
+    document.getElementById("success").innerText = "";
+    return false;
+  }
+
+  // Save the user with email
+  users.push({ username, email, password });
+  localStorage.setItem("users", JSON.stringify(users));
+
+  // Show success and redirect
+  document.getElementById("success").innerText = "Registered successfully! Redirecting...";
+  document.getElementById("error").innerText = "";
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 1500);
+
+  return false;
+}
+</script>
+
+</body>
+</html>
