@@ -27,12 +27,13 @@
     }
 
     .sidebar a {
-      display: block;
-      padding: 15px;
-      text-decoration: none;
-      color: white;
-      transition: background 0.3s;
-    }
+  display: block;
+  padding: 15px;
+  text-decoration: none;
+  color: white;
+  transition: background 0.3s;
+  cursor: pointer;  /* <-- Add this line */
+}
 
     .sidebar a:hover {
       background-color: #34495e;
@@ -63,12 +64,12 @@
 <body>
 
   <div class="sidebar">
-    <h2>MENU</h2>
-    <a>Home</a>
-    <a>Product</a>
-    <a>Service</a>
-    <a>Settings</a>
-  </div>
+  <h2>MENU</h2>
+  <a href="#">Home</a>
+  <a href="#">Product</a>
+  <a href="#">Service</a>
+  <a href="#">Settings</a>
+</div>
 
   <div class="main-content">
     <h1>Welcome to MXRTIN WORLD </h1>
@@ -77,6 +78,13 @@
   <div id="product-list" class="card"></div>
 
 <script>
+  const products = [
+  { id: 1, name: "T-Shirt", price: 499 },
+  { id: 2, name: "Pant", price: 899 },
+  { id: 3, name: "Shoes", price: 1199 },
+  { id: 4, name: "Jacket", price: 1499 }
+];
+
   function renderHome() {
   const mainContent = document.querySelector('.main-content');
   mainContent.innerHTML = `
