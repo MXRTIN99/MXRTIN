@@ -112,16 +112,14 @@
     });
   }
 
-  function renderHome() {
-    const mainContent = document.querySelector('.main-content');
-    mainContent.innerHTML = `
-      <h1>Welcome to Craftopia</h1>
-      <h2>Handmade with love❤ </h2>
-      <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
-      <div id="product-list" class="card"></div>
-    `;
-    renderProducts("product-list");
-  }
+function renderHome() {
+  const mainContent = document.querySelector('.main-content');
+  mainContent.innerHTML = `
+    <h1>Welcome to Craftopia</h1>
+    <h2>Handmade with love❤ </h2>
+    <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
+  `;
+}
 
   function renderProductPage() {
     const mainContent = document.querySelector('.main-content');
