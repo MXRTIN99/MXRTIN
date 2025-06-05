@@ -103,8 +103,8 @@ const productCard = document.createElement("div");
 productCard.className = "card";
 productCard.innerHTML = `
   <a href="${product.image}" target="_blank">
-    <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
-  </a>
+  <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+</a>
   <h3>${product.name}</h3>
   <p>Price: ₹${product.price}</p>
   <button onclick="placeOrder(${product.id})">Order Now</button>
@@ -124,9 +124,9 @@ products.forEach(product => {
 const productCard = document.createElement("div");
 productCard.className = "card";
 productCard.innerHTML = `
-  <a href="${product.image}" target="_blank">
-    <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
-  </a>
+<a href="${product.image}" target="_blank">
+  <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+</a>
   <h3>${product.name}</h3>
   <p>Price: ₹${product.price}</p>
   <button onclick="placeOrder(${product.id})">Order Now</button>
