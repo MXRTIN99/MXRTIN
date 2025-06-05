@@ -59,6 +59,11 @@
     .card h3 {
       margin-top: 0;
     }
+#product-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
   </style>
 </head>
 <body>
@@ -93,16 +98,16 @@
      <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
   `;
   const productList = document.getElementById("product-list");
-  products.forEach(product => {
-    const productCard = document.createElement("div");
-    productCard.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>Price: ₹${product.price}</p>
-      <button onclick="placeOrder(${product.id})">Order Now</button>
-      <hr>
-    `;
-    productList.appendChild(productCard);
-  });
+products.forEach(product => {
+  const productCard = document.createElement("div");
+  productCard.className = "card";
+  productCard.innerHTML = `
+    <h3>${product.name}</h3>
+    <p>Price: ₹${product.price}</p>
+    <button onclick="placeOrder(${product.id})">Order Now</button>
+  `;
+  productList.appendChild(productCard);
+});
 }
 
 function renderProductPage() {
@@ -112,17 +117,17 @@ function renderProductPage() {
     <div id="product-list" class="card"></div>
   `;
   const productList = document.getElementById("product-list");
-  products.forEach(product => {
-    const productCard = document.createElement("div");
-    productCard.innerHTML = `
-      <h3>${product.name}</h3>
-      <p>Price: ₹${product.price}</p>
-      <button onclick="placeOrder(${product.id})">Order Now</button>
-      <hr>
-    `;
-    productList.appendChild(productCard);
-  });
-}
+products.forEach(product => {
+  const productCard = document.createElement("div");
+  productCard.className = "card";
+  productCard.innerHTML = `
+    <h3>${product.name}</h3>
+    <p>Price: ₹${product.price}</p>
+    <button onclick="placeOrder(${product.id})">Order Now</button>
+  `;
+  productList.appendChild(productCard);
+});
+ }
 
 // Event listeners for sidebar navigation
 document.querySelectorAll('.sidebar a').forEach(link => {
