@@ -77,14 +77,14 @@
   <div id="product-list" class="card"></div>
 
 <script>
-  const products = [
-    { id: 1, name: "T-Shirt", price: 499 },
-    { id: 2, name: "Perfume", price: 799 },
-    { id: 3, name: "Shoes", price: 1199 }
-  ];
-
+  function renderHome() {
+  const mainContent = document.querySelector('.main-content');
+  mainContent.innerHTML = `
+    <h1>Welcome to MXRTIN WORLD</h1>
+    <h2>Available Products</h2>
+    <div id="product-list" class="card"></div>
+  `;
   const productList = document.getElementById("product-list");
-
   products.forEach(product => {
     const productCard = document.createElement("div");
     productCard.innerHTML = `
@@ -95,17 +95,46 @@
     `;
     productList.appendChild(productCard);
   });
+}
 
-  function placeOrder(productId) {
-    const selectedProduct = products.find(p => p.id === productId);
-    let orders = JSON.parse(localStorage.getItem("orders")) || [];
-    orders.push({
-      ...selectedProduct,
-      orderedAt: new Date().toLocaleString()
-    });
-    localStorage.setItem("orders", JSON.stringify(orders));
-    alert(`${selectedProduct.name} has been ordered!`);
-  }
+function renderProductPage() {
+  const mainContent = document.querySelector('.main-content');
+  mainContent.innerHTML = `
+    <h1>Product List</h1>
+    <div id="product-list" class="card"></div>
+  `;
+  const productList = document.getElementById("product-list");
+  products.forEach(product => {
+    const productCard = document.createElement("div");
+    productCard.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>Price: ₹${product.price}</p>
+      <button onclick="placeOrder(${product.id})">Order Now</button>
+      <hr>
+    `;
+    productList.appendChild(productCard);
+  });
+}
+
+// Event listeners for sidebar navigation
+document.querySelectorAll('.sidebar a').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    const page = e.target.textContent.toLowerCase();
+    if (page === 'home') renderHome();
+    else if (page === 'product') renderProductPage();
+    else if (page === 'service') {
+      document.querySelector('.main-content').innerHTML = `<h1>Services Page</h1><p>Services details here...</p>`;
+    }
+    else if (page === 'settings') {
+      document.querySelector('.main-content').innerHTML = `<h1>Settings Page</h1><p>Settings options here...</p>`;
+    }
+  });
+});
+
+// Load home page initially
+renderHome();
+
 </script>
 </body>
 </html>
