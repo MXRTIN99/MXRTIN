@@ -72,22 +72,40 @@
 
   <div class="main-content">
     <h1>Welcome to MXRTIN WORLD </h1>
+    
+    <h2>Available Products</h2>
+  <div id="product-list" class="card"></div>
 
-    <div class="card">
-      <h3>Profile Overview</h3>
-      <p>This is where your profile information would go.</p>
-    </div>
+<script>
+  const products = [
+    { id: 1, name: "T-Shirt", price: 499 },
+    { id: 2, name: "Perfume", price: 799 },
+    { id: 3, name: "Shoes", price: 1199 }
+  ];
 
-    <div class="card">
-      <h3>Messages</h3>
-      <p>You have 3 new messages.</p>
-    </div>
+  const productList = document.getElementById("product-list");
 
-    <div class="card">
-      <h3>Stats</h3>
-      <p>Views today: 120<br> New followers: 10</p>
-    </div>
-  </div>
+  products.forEach(product => {
+    const productCard = document.createElement("div");
+    productCard.innerHTML = `
+      <h3>${product.name}</h3>
+      <p>Price: ₹${product.price}</p>
+      <button onclick="placeOrder(${product.id})">Order Now</button>
+      <hr>
+    `;
+    productList.appendChild(productCard);
+  });
 
+  function placeOrder(productId) {
+    const selectedProduct = products.find(p => p.id === productId);
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    orders.push({
+      ...selectedProduct,
+      orderedAt: new Date().toLocaleString()
+    });
+    localStorage.setItem("orders", JSON.stringify(orders));
+    alert(`${selectedProduct.name} has been ordered!`);
+  }
+</script>
 </body>
 </html>
