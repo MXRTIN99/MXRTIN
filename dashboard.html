@@ -2,13 +2,23 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DASHBOARD - CRAFTOPIA</title>
+  <title>Craftopia Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #f4f4f4;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    .dark-mode {
+      background-color: #1e1e1e;
+      color: #f1f1f1;
     }
 
     .sidebar {
@@ -25,8 +35,7 @@
 
     .sidebar h2 {
       text-align: center;
-      margin-bottom: 30px;
-      font-weight: 600;
+      margin-bottom: 20px;
     }
 
     .sidebar a {
@@ -42,6 +51,18 @@
       background-color: #34495e;
     }
 
+    .toggle-dark {
+      display: block;
+      margin: 10px auto;
+      padding: 8px 10px;
+      font-size: 12px;
+      background-color: #ecf0f1;
+      color: #333;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
     .main-content {
       margin-left: 200px;
       padding: 30px;
@@ -54,18 +75,16 @@
     }
 
     .card {
-      background-color: rgba(255, 255, 255, 0.8);
+      background-color: rgba(255, 255, 255, 0.85);
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 20px;
-      font-weight: 400;
       color: black;
     }
 
     .card h3 {
       margin-top: 0;
-      font-weight: 600;
     }
 
     #product-list {
@@ -90,6 +109,11 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       cursor: pointer;
       z-index: 4;
+      transition: transform 0.3s ease-in-out;
+    }
+
+    #cart-icon:hover {
+      transform: scale(1.1);
     }
 
     #cart-count {
@@ -120,23 +144,26 @@
       overflow-y: auto;
       transition: right 0.4s ease;
       z-index: 3;
-      font-weight: 400;
+      color: black;
     }
 
     #cart.show {
       right: 0;
     }
 
-    #cart h2, h3 {
-      font-weight: 600;
+    .dark-mode .main-content {
+      background-image: none;
+      background-color: #111;
     }
 
-    button {
-      padding: 5px 10px;
-      margin-top: 5px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-weight: 500;
+    .dark-mode .card {
+      background-color: rgba(50, 50, 50, 0.9);
+      color: white;
+    }
+
+    .dark-mode #cart {
+      background: #222;
+      color: white;
     }
   </style>
 </head>
@@ -144,6 +171,7 @@
 
   <div class="sidebar">
     <h2>MENU</h2>
+    <button class="toggle-dark" onclick="toggleDarkMode()">🌙 Toggle Dark Mode</button>
     <a href="#">Home</a>
     <a href="#">Fridge magnets</a>
     <a href="#">Charms</a>
@@ -183,7 +211,7 @@
     { id: 10, name: "Strawbibi charm", price: 90, image: "images/product10.jpg", category: "charms" },
     { id: 16, name: "Doraemon keychain", price: 50, image: "images/product16.jpg", category: "keychains" },
     { id: 17, name: "Bee keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
-    { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" },
+    { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" }
   ];
 
   let cart = [];
@@ -268,13 +296,8 @@
     window.location.href = "order.html";
   }
 
-  function renderHome() {
-    const mainContent = document.querySelector('.main-content');
-    mainContent.innerHTML = `
-      <h1>Welcome to Craftopia</h1>
-      <h2>Handmade with love ❤</h2>
-      <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
-    `;
+  function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
   }
 
   document.querySelectorAll('.sidebar a').forEach(link => {
@@ -285,7 +308,11 @@
       window.scrollTo(0, 0);
 
       if (page === 'home') {
-        renderHome();
+        mainContent.innerHTML = `
+          <h1>Welcome to Craftopia</h1>
+          <h2>Handmade with love ❤</h2>
+          <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
+        `;
       } else {
         mainContent.innerHTML = `
           <h1>${e.target.textContent}</h1>
