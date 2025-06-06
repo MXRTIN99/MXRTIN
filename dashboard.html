@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DASHBOARD</title>
+  <title>DASHBOARD - CRAFTOPIA</title>
   <style>
     body {
       margin: 0;
@@ -19,6 +19,7 @@
       background-color: #2c3e50;
       padding-top: 20px;
       color: white;
+      z-index: 2;
     }
 
     .sidebar h2 {
@@ -42,7 +43,7 @@
     .main-content {
       margin-left: 200px;
       padding: 30px;
-      min-height: 100vh;
+      min-height: 100vh; 
       background-image: url(images/background.signup.login2.jpg);
       background-size: cover;
       background-position: center;
@@ -50,11 +51,11 @@
     }
 
     .card {
-      background-color: rgba(255,255,255,0.8);
+      background-color: rgba(255, 255, 255, 0.8);
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 20px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
 
     .card h3 {
@@ -67,22 +68,50 @@
       gap: 20px;
     }
 
+    /* Cart Icon */
+    #cart-icon {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 28px;
+      background-color: white;
+      color: black;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      cursor: pointer;
+      z-index: 3;
+    }
+
+    /* Cart Sidebar */
     #cart {
       position: fixed;
       right: 0;
       top: 0;
       width: 300px;
-      background: white;
       height: 100vh;
-      overflow-y: auto;
+      background: white;
       box-shadow: -2px 0 5px rgba(0,0,0,0.2);
       padding: 20px;
-      z-index: 999;
+      overflow-y: auto;
+      display: none;
+      z-index: 2;
     }
 
     #cart h2 {
       margin-top: 0;
     }
+
+    button {
+      padding: 5px 10px;
+      margin-top: 5px;
+      cursor: pointer;
+    }
+
   </style>
 </head>
 <body>
@@ -96,154 +125,151 @@
     <a href="#">Settings</a>
   </div>
 
-  <div class="main-content" id="main-content">
-    <!-- Content dynamically injected -->
+  <div class="main-content">
+    <h1>Welcome to CRAFTOPIA</h1>
+    <h2>Trending Products</h2>
+    <div id="product-list" class="card"></div>
   </div>
 
+  <!-- Cart Icon -->
+  <div id="cart-icon" onclick="toggleCart()">🛒</div>
+
+  <!-- Hidden Cart Sidebar -->
   <div id="cart">
-    <h2>Cart</h2>
+    <h2>Your Cart</h2>
     <div id="cart-items"></div>
     <h3>Total: ₹<span id="cart-total">0</span></h3>
     <button onclick="checkout()">Checkout</button>
   </div>
 
-  <script>
-    const products = [
-      // Fridge Magnets
-      { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
-      { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg", category: "fridge magnets" },
-      { id: 3, name: "Straw-berry cute fridge magnet", price: 90, image: "images/product3.jpg", category: "fridge magnets" },
-      { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg", category: "fridge magnets" },
-      { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
-      { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
-      { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
+<script>
+  const products = [
+    { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
+    { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg", category: "fridge magnets" },
+    { id: 3, name: "Strawberry fridge magnet", price: 90, image: "images/product3.jpg", category: "fridge magnets" },
+    { id: 4, name: "Mushroom fridge magnet", price: 90, image: "images/product4.jpg", category: "fridge magnets" },
+    { id: 5, name: "Bee fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
+    { id: 6, name: "Rice ball magnet", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
+    { id: 7, name: "Dumpling magnet", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
 
-      // Charms
-      { id: 8, name: "Kitty phone charms (Light gray)", price: 100, image: "images/product8.jpg", category: "charms" },
-      { id: 9, name: "Kitty phone charms (Pink)", price: 80, image: "images/product9.jpg", category: "charms" },
-      { id: 10, name: "Strawbibi phone charms", price: 90, image: "images/product10.jpg", category: "charms" },
-      { id: 11, name: "Kitty phone charms (Dark gray)", price: 90, image: "images/product11.jpg", category: "charms" },
-      { id: 12, name: "Berryboo phone charms", price: 120, image: "images/product12.jpg", category: "charms" },
-      { id: 13, name: "Phone charms (Sky blue)", price: 80, image: "images/product13.jpg", category: "charms" },
-      { id: 14, name: "Sweet melon charms", price: 50, image: "images/product14.jpg", category: "charms" },
-      { id: 15, name: "Butterfly charms", price: 80, image: "images/product15.jpg", category: "charms" },
+    { id: 8, name: "Kitty charm (Gray)", price: 100, image: "images/product8.jpg", category: "charms" },
+    { id: 9, name: "Kitty charm (Pink)", price: 80, image: "images/product9.jpg", category: "charms" },
+    { id: 10, name: "Strawbibi charm", price: 90, image: "images/product10.jpg", category: "charms" },
 
-      // Keychains
-      { id: 16, name: "Doraemon key chain", price: 50, image: "images/product16.jpg", category: "keychains" },
-      { id: 17, name: "Bee happy keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
-      { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" }
-    ];
+    { id: 16, name: "Doraemon keychain", price: 50, image: "images/product16.jpg", category: "keychains" },
+    { id: 17, name: "Bee keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
+    { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" },
+  ];
 
-    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
+  let cart = [];
 
-    function renderProducts(containerId, category = null) {
-      const productList = document.getElementById(containerId);
-      productList.innerHTML = "";
-      const filtered = category ? products.filter(p => p.category === category) : products;
+  function renderProducts(containerId, category = null) {
+    const productList = document.getElementById(containerId);
+    productList.innerHTML = "";
+    const filtered = category ? products.filter(p => p.category === category) : products;
 
-      filtered.forEach(product => {
-        const productCard = document.createElement("div");
-        productCard.className = "card";
-        productCard.innerHTML = `
-          <a href="${product.image}" target="_blank">
-            <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
-          </a>
-          <h3>${product.name}</h3>
-          <p>Price: ₹${product.price}</p>
-          <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label>
-          <button onclick="addToCart(${product.id})">Add to Cart</button>
-        `;
-        productList.appendChild(productCard);
-      });
-    }
-
-    function addToCart(productId) {
-      const qtyInput = document.getElementById(`qty-${productId}`);
-      const quantity = parseInt(qtyInput.value);
-      if (quantity < 1) return alert("Quantity must be at least 1");
-
-      const product = products.find(p => p.id === productId);
-      const existing = cart.find(item => item.id === productId);
-
-      if (existing) {
-        existing.quantity += quantity;
-      } else {
-        cart.push({ ...product, quantity });
-      }
-
-      localStorage.setItem("cartItems", JSON.stringify(cart));
-      updateCartUI();
-    }
-
-    function removeFromCart(id) {
-      cart = cart.filter(item => item.id !== id);
-      localStorage.setItem("cartItems", JSON.stringify(cart));
-      updateCartUI();
-    }
-
-    function updateCartUI() {
-      const cartItemsDiv = document.getElementById("cart-items");
-      const cartTotalSpan = document.getElementById("cart-total");
-      cartItemsDiv.innerHTML = "";
-      let total = 0;
-
-      cart.forEach(item => {
-        const subtotal = item.price * item.quantity;
-        total += subtotal;
-        cartItemsDiv.innerHTML += `
-          <div style="margin-bottom: 10px;">
-            <strong>${item.name}</strong><br>
-            ₹${item.price} × ${item.quantity} = ₹${subtotal}
-            <button onclick="removeFromCart(${item.id})" style="margin-left:10px;">Remove</button>
-          </div>
-        `;
-      });
-
-      cartTotalSpan.textContent = total;
-    }
-
-    function checkout() {
-      if (cart.length === 0) {
-        alert("Your cart is empty!");
-        return;
-      }
-
-      localStorage.setItem("cartItems", JSON.stringify(cart));
-      window.location.href = "order.html";
-    }
-
-    function renderHome() {
-      const mainContent = document.getElementById('main-content');
-      mainContent.innerHTML = `
-        <h1 style="color: white;">Welcome to Craftopia</h1>
-        <h2 style="color: white;">Handmade with love ❤</h2>
-        <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
-        <div id="product-list" class="card"></div>
+    filtered.forEach(product => {
+      const productCard = document.createElement("div");
+      productCard.className = "card";
+      productCard.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+        <h3>${product.name}</h3>
+        <p>Price: ₹${product.price}</p>
+        <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label><br>
+        <button onclick="addToCart(${product.id})">Add to Cart</button>
       `;
-      renderProducts("product-list");
+      productList.appendChild(productCard);
+    });
+  }
+
+  function addToCart(productId) {
+    const qtyInput = document.getElementById(`qty-${productId}`);
+    const quantity = parseInt(qtyInput.value);
+    if (quantity < 1) return alert("Minimum 1 item required");
+
+    const product = products.find(p => p.id === productId);
+    const existing = cart.find(item => item.id === productId);
+
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      cart.push({ ...product, quantity });
     }
 
-    // Sidebar link navigation
-    document.querySelectorAll('.sidebar a').forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const page = e.target.textContent.toLowerCase();
-        window.scrollTo(0, 0);
-        const mainContent = document.getElementById('main-content');
+    updateCartUI();
+  }
 
-        if (page === 'home') {
-          renderHome();
-        } else {
-          mainContent.innerHTML = `<h1 style="color:white;">${e.target.textContent}</h1><div id="product-list" class="card"></div>`;
-          renderProducts("product-list", page);
-        }
-      });
+  function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCartUI();
+  }
+
+  function updateCartUI() {
+    const cartItemsDiv = document.getElementById("cart-items");
+    const cartTotalSpan = document.getElementById("cart-total");
+    cartItemsDiv.innerHTML = "";
+    let total = 0;
+
+    cart.forEach(item => {
+      const subtotal = item.price * item.quantity;
+      total += subtotal;
+      cartItemsDiv.innerHTML += `
+        <div style="margin-bottom: 10px;">
+          <strong>${item.name}</strong><br>
+          ₹${item.price} × ${item.quantity} = ₹${subtotal}
+          <button onclick="removeFromCart(${item.id})">Remove</button>
+        </div>
+      `;
     });
 
-    // ✅ Initial Load
-    renderHome();
-    updateCartUI();
-  </script>
+    cartTotalSpan.textContent = total;
+  }
 
+  function toggleCart() {
+    const cartDiv = document.getElementById("cart");
+    cartDiv.style.display = cartDiv.style.display === "block" ? "none" : "block";
+  }
+
+  function checkout() {
+    if (cart.length === 0) {
+      alert("Your cart is empty!");
+      return;
+    }
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+    window.location.href = "order.html";
+  }
+
+  function renderHome() {
+    const mainContent = document.querySelector('.main-content');
+    mainContent.innerHTML = `
+      <h1 style="color: white;">Welcome to Craftopia</h1>
+      <h2 style="color: white;">Handmade with love ❤</h2>
+      <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
+    `;
+  }
+
+  document.querySelectorAll('.sidebar a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = e.target.textContent.toLowerCase();
+      const mainContent = document.querySelector('.main-content');
+      window.scrollTo(0, 0);
+
+      if (page === 'home') {
+        renderHome();
+      } else {
+        mainContent.innerHTML = `
+          <h1 style="color:white;">${e.target.textContent}</h1>
+          <div id="product-list" class="card"></div>
+        `;
+        renderProducts("product-list", page);
+      }
+    });
+  });
+
+  // Initialize
+  renderProducts("product-list");
+  updateCartUI();
+</script>
 </body>
 </html>
