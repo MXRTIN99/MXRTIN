@@ -45,7 +45,7 @@
     .main-content {
       margin-left: 200px;
       padding: 30px;
-      min-height: 100vh; 
+      min-height: 100vh;
       background-image: url(images/background.signup.login2.jpg);
       background-size: cover;
       background-position: center;
@@ -89,12 +89,28 @@
       justify-content: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       cursor: pointer;
-      z-index: 3;
+      z-index: 4;
+    }
+
+    #cart-count {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      background: red;
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+      border-radius: 50%;
+      width: 18px;
+      height: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     #cart {
       position: fixed;
-      right: 0;
+      right: -320px;
       top: 0;
       width: 300px;
       height: 100vh;
@@ -102,9 +118,13 @@
       box-shadow: -2px 0 5px rgba(0,0,0,0.2);
       padding: 20px;
       overflow-y: auto;
-      display: none;
-      z-index: 2;
+      transition: right 0.4s ease;
+      z-index: 3;
       font-weight: 400;
+    }
+
+    #cart.show {
+      right: 0;
     }
 
     #cart h2, h3 {
@@ -137,7 +157,10 @@
     <div id="product-list" class="card"></div>
   </div>
 
-  <div id="cart-icon" onclick="toggleCart()">🛒</div>
+  <div id="cart-icon" onclick="toggleCart()">
+    🛒
+    <div id="cart-count">0</div>
+  </div>
 
   <div id="cart">
     <h2>Your Cart</h2>
@@ -209,12 +232,15 @@
   function updateCartUI() {
     const cartItemsDiv = document.getElementById("cart-items");
     const cartTotalSpan = document.getElementById("cart-total");
+    const cartCount = document.getElementById("cart-count");
     cartItemsDiv.innerHTML = "";
     let total = 0;
+    let itemCount = 0;
 
     cart.forEach(item => {
       const subtotal = item.price * item.quantity;
       total += subtotal;
+      itemCount += item.quantity;
       cartItemsDiv.innerHTML += `
         <div style="margin-bottom: 10px;">
           <strong>${item.name}</strong><br>
@@ -225,11 +251,12 @@
     });
 
     cartTotalSpan.textContent = total;
+    cartCount.textContent = itemCount;
   }
 
   function toggleCart() {
     const cartDiv = document.getElementById("cart");
-    cartDiv.style.display = cartDiv.style.display === "block" ? "none" : "block";
+    cartDiv.classList.toggle("show");
   }
 
   function checkout() {
