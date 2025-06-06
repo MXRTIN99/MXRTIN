@@ -83,6 +83,14 @@
     
     <h2>Trending Products</h2>
   <div id="product-list" class="card"></div>
+  
+    <div id="cart" style="position: fixed; right: 0; top: 0; width: 300px; background: white; height: 100vh; overflow-y: auto; box-shadow: -2px 0 5px rgba(0,0,0,0.2); padding: 20px;">
+  <h2>Cart</h2>
+  <div id="cart-items"></div>
+  <h3>Total: ₹<span id="cart-total">0</span></h3>
+  <button onclick="checkout()">Checkout</button>
+</div>
+
 
 <script>
   const products = [
@@ -125,11 +133,58 @@
       </a>
       <h3>${product.name}</h3>
       <p>Price: ₹${product.price}</p>
-      <button onclick="placeOrder(${product.id})">Order Now</button>
+      <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label>
+<button onclick="addToCart(${product.id})">Add to Cart</button>
+
     `;
     productList.appendChild(productCard);
   });
 }
+  let cart = [];
+
+function addToCart(productId) {
+  const qtyInput = document.getElementById(`qty-${productId}`);
+  const quantity = parseInt(qtyInput.value);
+  if (quantity < 1) return alert("Quantity must be at least 1");
+
+  const product = products.find(p => p.id === productId);
+  const existing = cart.find(item => item.id === productId);
+
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({ ...product, quantity });
+  }
+
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const cartItemsDiv = document.getElementById("cart-items");
+  const cartTotalSpan = document.getElementById("cart-total");
+  cartItemsDiv.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item => {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+    cartItemsDiv.innerHTML += `
+      <div style="margin-bottom: 10px;">
+        <strong>${item.name}</strong><br>
+        ₹${item.price} × ${item.quantity} = ₹${subtotal}
+        <button onclick="removeFromCart(${item.id})" style="margin-left:10px;">Remove</button>
+      </div>
+    `;
+  });
+
+  cartTotalSpan.textContent = total;
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
 
 function renderHome() {
   const mainContent = document.querySelector('.main-content');
@@ -138,6 +193,50 @@ function renderHome() {
     <h2 style="color: white;">Handmade with love❤ </h2>
     <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
   `;
+}
+  let cart = [];
+
+function addToCart(productId) {
+  const qtyInput = document.getElementById(`qty-${productId}`);
+  const quantity = parseInt(qtyInput.value);
+  if (quantity < 1) return alert("Quantity must be at least 1");
+
+  const product = products.find(p => p.id === productId);
+  const existing = cart.find(item => item.id === productId);
+
+  if (existing) {
+    existing.quantity += quantity;
+  } else {
+    cart.push({ ...product, quantity });
+  }
+
+  updateCartUI();
+}
+
+function updateCartUI() {
+  const cartItemsDiv = document.getElementById("cart-items");
+  const cartTotalSpan = document.getElementById("cart-total");
+  cartItemsDiv.innerHTML = "";
+  let total = 0;
+
+  cart.forEach(item => {
+    const subtotal = item.price * item.quantity;
+    total += subtotal;
+    cartItemsDiv.innerHTML += `
+      <div style="margin-bottom: 10px;">
+        <strong>${item.name}</strong><br>
+        ₹${item.price} × ${item.quantity} = ₹${subtotal}
+        <button onclick="removeFromCart(${item.id})" style="margin-left:10px;">Remove</button>
+      </div>
+    `;
+  });
+
+  cartTotalSpan.textContent = total;
+}
+
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
 }
 
   function renderProductPage() {
@@ -191,6 +290,26 @@ if (page === 'home') {
 
   // Initial load
   renderHome();
+
+  function checkout() {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+
+  const orderSummary = cart.map(item =>
+    `${item.name} - Qty: ${item.quantity} - ₹${item.price * item.quantity}`
+  ).join('\n');
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  alert("Order Placed!\n\n" + orderSummary + `\n\nTotal: ₹${total}`);
+
+  // Empty cart
+  cart = [];
+  updateCartUI();
+}
+
 </script>
 </body>
 </html>
