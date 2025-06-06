@@ -42,6 +42,7 @@
     .main-content {
   margin-left: 200px;
   padding: 30px;
+  min-height: 100vh; 
   background-image: url(https://a-static.besthdwallpaper.com/simple-minimalism-white-color-wallpaper-1920x1440-82612_25.jpg);
   background-size: cover;
   background-position: center;
@@ -115,9 +116,9 @@
 function renderHome() {
   const mainContent = document.querySelector('.main-content');
   mainContent.innerHTML = `
-    <h1>Welcome to Craftopia</h1>
-    <h2>Handmade with love❤ </h2>
-    <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
+    <h1 style="color: white;">Welcome to Craftopia</h1>
+    <h2 style="color: white;">Handmade with love❤ </h2>
+    <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
   `;
 }
 
