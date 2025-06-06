@@ -152,6 +152,9 @@ function renderHome() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const page = e.target.textContent.toLowerCase();
+
+       window.scrollTo(0, 0);
+      
 if (page === 'home') {
   renderHome();
 } else if (page === 'fridge magnets') {
