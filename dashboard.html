@@ -93,6 +93,11 @@
 
 
 <script>
+  // Load home on start
+renderHome();
+updateCartUI(); // ✅ Show cart contents if already in cart
+renderProducts("product-list"); // ✅ Show products initially
+
 const products = [
   // Fridge Magnets
   { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
