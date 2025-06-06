@@ -57,25 +57,42 @@
   <!-- ✅ Include EmailJS library -->
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
-  <!-- ✅ JavaScript to handle the form -->
-  <script>
-    (function() {
-      emailjs.init("X5cW5vfsYTqXzQmfQ"); // your PUBLIC KEY
-    })();
+<script>
+  window.onload = function () {
+    const cartData = JSON.parse(localStorage.getItem("cartItems"));
+    const messageBox = document.querySelector("textarea[name='message']");
 
-    document.getElementById("orderForm").addEventListener("submit", function(event) {
-      event.preventDefault();
+    if (cartData && cartData.length > 0 && messageBox) {
+      let orderText = "";
+      let total = 0;
 
-      emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
-        .then(function(response) {
-          alert("Order sent successfully! 🎉");
-        }, function(error) {
-          alert("Failed to send order 😓: " + JSON.stringify(error));
-        });
+      cartData.forEach(item => {
+        const itemTotal = item.price * item.quantity;
+        orderText += `${item.name} - ₹${item.price} × ${item.quantity} = ₹${itemTotal}\n`;
+        total += itemTotal;
+      });
 
-      this.reset(); // Optional: clear form
-    });
-  </script>
+      orderText += `\nTotal: ₹${total}`;
+      messageBox.value = orderText;
+    }
+  };
 
+  (function() {
+    emailjs.init("X5cW5vfsYTqXzQmfQ"); // ✅ your public key
+  })();
+
+  document.getElementById("orderForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
+      .then(function(response) {
+        alert("Order sent successfully! 🎉");
+        localStorage.removeItem("cartItems"); // ✅ clear cart after sending
+        document.getElementById("orderForm").reset();
+      }, function(error) {
+        alert("Failed to send order 😓: " + JSON.stringify(error));
+      });
+  });
+</script>
 </body>
 </html>
