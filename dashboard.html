@@ -3,10 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>DASHBOARD - CRAFTOPIA</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #f4f4f4;
     }
 
@@ -25,6 +26,7 @@
     .sidebar h2 {
       text-align: center;
       margin-bottom: 30px;
+      font-weight: 600;
     }
 
     .sidebar a {
@@ -48,6 +50,7 @@
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
+      color: white;
     }
 
     .card {
@@ -56,10 +59,13 @@
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
       padding: 20px;
       margin-bottom: 20px;
+      font-weight: 400;
+      color: black;
     }
 
     .card h3 {
       margin-top: 0;
+      font-weight: 600;
     }
 
     #product-list {
@@ -68,7 +74,6 @@
       gap: 20px;
     }
 
-    /* Cart Icon */
     #cart-icon {
       position: fixed;
       top: 15px;
@@ -87,7 +92,6 @@
       z-index: 3;
     }
 
-    /* Cart Sidebar */
     #cart {
       position: fixed;
       right: 0;
@@ -100,18 +104,20 @@
       overflow-y: auto;
       display: none;
       z-index: 2;
+      font-weight: 400;
     }
 
-    #cart h2 {
-      margin-top: 0;
+    #cart h2, h3 {
+      font-weight: 600;
     }
 
     button {
       padding: 5px 10px;
       margin-top: 5px;
       cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 500;
     }
-
   </style>
 </head>
 <body>
@@ -131,10 +137,8 @@
     <div id="product-list" class="card"></div>
   </div>
 
-  <!-- Cart Icon -->
   <div id="cart-icon" onclick="toggleCart()">🛒</div>
 
-  <!-- Hidden Cart Sidebar -->
   <div id="cart">
     <h2>Your Cart</h2>
     <div id="cart-items"></div>
@@ -151,11 +155,9 @@
     { id: 5, name: "Bee fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
     { id: 6, name: "Rice ball magnet", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
     { id: 7, name: "Dumpling magnet", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
-
     { id: 8, name: "Kitty charm (Gray)", price: 100, image: "images/product8.jpg", category: "charms" },
     { id: 9, name: "Kitty charm (Pink)", price: 80, image: "images/product9.jpg", category: "charms" },
     { id: 10, name: "Strawbibi charm", price: 90, image: "images/product10.jpg", category: "charms" },
-
     { id: 16, name: "Doraemon keychain", price: 50, image: "images/product16.jpg", category: "keychains" },
     { id: 17, name: "Bee keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
     { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" },
@@ -242,9 +244,9 @@
   function renderHome() {
     const mainContent = document.querySelector('.main-content');
     mainContent.innerHTML = `
-      <h1 style="color: white;">Welcome to Craftopia</h1>
-      <h2 style="color: white;">Handmade with love ❤</h2>
-      <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
+      <h1>Welcome to Craftopia</h1>
+      <h2>Handmade with love ❤</h2>
+      <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
     `;
   }
 
@@ -259,7 +261,7 @@
         renderHome();
       } else {
         mainContent.innerHTML = `
-          <h1 style="color:white;">${e.target.textContent}</h1>
+          <h1>${e.target.textContent}</h1>
           <div id="product-list" class="card"></div>
         `;
         renderProducts("product-list", page);
@@ -267,7 +269,6 @@
     });
   });
 
-  // Initialize
   renderProducts("product-list");
   updateCartUI();
 </script>
