@@ -121,12 +121,9 @@ const products = [
 
 let cart = [];
 
-// Render products filtered by category inside the container with id containerId
-function renderProducts(containerId, category) {
+function renderProducts(containerId, category = null) {
   const productList = document.getElementById(containerId);
   productList.innerHTML = "";
-
-  // Filter products by category or show all if category is not provided
   const filtered = category ? products.filter(p => p.category === category) : products;
 
   filtered.forEach(product => {
@@ -145,14 +142,10 @@ function renderProducts(containerId, category) {
   });
 }
 
-// Add product with quantity to cart
 function addToCart(productId) {
   const qtyInput = document.getElementById(`qty-${productId}`);
   const quantity = parseInt(qtyInput.value);
-  if (isNaN(quantity) || quantity < 1) {
-    alert("Quantity must be at least 1");
-    return;
-  }
+  if (quantity < 1) return alert("Quantity must be at least 1");
 
   const product = products.find(p => p.id === productId);
   const existing = cart.find(item => item.id === productId);
@@ -166,12 +159,15 @@ function addToCart(productId) {
   updateCartUI();
 }
 
-// Update the cart UI: items and total
+function removeFromCart(id) {
+  cart = cart.filter(item => item.id !== id);
+  updateCartUI();
+}
+
 function updateCartUI() {
   const cartItemsDiv = document.getElementById("cart-items");
   const cartTotalSpan = document.getElementById("cart-total");
   cartItemsDiv.innerHTML = "";
-
   let total = 0;
 
   cart.forEach(item => {
@@ -189,13 +185,16 @@ function updateCartUI() {
   cartTotalSpan.textContent = total;
 }
 
-// Remove item from cart by id
-function removeFromCart(id) {
-  cart = cart.filter(item => item.id !== id);
-  updateCartUI();
+function checkout() {
+  if (cart.length === 0) {
+    alert("Your cart is empty!");
+    return;
+  }
+
+  localStorage.setItem("cartItems", JSON.stringify(cart));
+  window.location.href = "order.html";
 }
 
-// Render Home content
 function renderHome() {
   const mainContent = document.querySelector('.main-content');
   mainContent.innerHTML = `
@@ -205,71 +204,29 @@ function renderHome() {
   `;
 }
 
-// Sidebar link click handlers
+// Sidebar link navigation
 document.querySelectorAll('.sidebar a').forEach(link => {
   link.addEventListener('click', (e) => {
     e.preventDefault();
     const page = e.target.textContent.toLowerCase();
-
     window.scrollTo(0, 0);
+
+    const mainContent = document.querySelector('.main-content');
 
     if (page === 'home') {
       renderHome();
-    } else if (page === 'fridge magnets') {
-      const mainContent = document.querySelector('.main-content');
+    } else {
       mainContent.innerHTML = `
-        <h1 style="color:white;">Fridge Magnets</h1>
+        <h1 style="color:white;">${e.target.textContent}</h1>
         <div id="product-list" class="card"></div>
       `;
-      renderProducts("product-list", "fridge magnets");
-    } else if (page === 'charms') {
-      const mainContent = document.querySelector('.main-content');
-      mainContent.innerHTML = `
-        <h1 style="color:white;">Charms</h1>
-        <div id="product-list" class="card"></div>
-      `;
-      renderProducts("product-list", "charms");
-    } else if (page === 'keychains') {
-      const mainContent = document.querySelector('.main-content');
-      mainContent.innerHTML = `
-        <h1 style="color:white;">Keychains</h1>
-        <div id="product-list" class="card"></div>
-      `;
-      renderProducts("product-list", "keychains");
-    } else if (page === 'settings') {
-      const mainContent = document.querySelector('.main-content');
-      mainContent.innerHTML = `
-        <h1 style="color:white;">Settings</h1>
-        <p style="color:white;">Settings page content goes here.</p>
-      `;
+      renderProducts("product-list", page);
     }
   });
 });
 
-// Initial load
+// Load home on start
 renderHome();
-
-// Checkout function
-function checkout() {
-  if (cart.length === 0) {
-    alert("Your cart is empty!");
-    return;
-  }
-
-  const orderSummary = cart.map(item =>
-    `${item.name} - Qty: ${item.quantity} - ₹${item.price * item.quantity}`
-  ).join('\n');
-
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-
-  alert("Order Placed!\n\n" + orderSummary + `\n\nTotal: ₹${total}`);
-
-  // Empty cart after checkout
-  cart = [];
-  updateCartUI();
-}
-
-
 </script>
 </body>
 </html>
