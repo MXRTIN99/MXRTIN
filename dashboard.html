@@ -27,211 +27,223 @@
     }
 
     .sidebar a {
-  display: block;
-  padding: 15px;
-  text-decoration: none;
-  color: white;
-  transition: background 0.3s;
-  cursor: pointer;  /* <-- Add this line */
-}
+      display: block;
+      padding: 15px;
+      text-decoration: none;
+      color: white;
+      transition: background 0.3s;
+      cursor: pointer;
+    }
 
     .sidebar a:hover {
       background-color: #34495e;
     }
 
     .main-content {
-  margin-left: 200px;
-  padding: 30px;
-  min-height: 100vh; 
-  background-image: url(images/background.signup.login2.jpg);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
+      margin-left: 200px;
+      padding: 30px;
+      min-height: 100vh;
+      background-image: url(images/background.signup.login2.jpg);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
 
     .card {
-      background-color: transparent;
+      background-color: rgba(255,255,255,0.8);
       border-radius: 8px;
       box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-      padding: 30px;
+      padding: 20px;
       margin-bottom: 30px;
     }
 
     .card h3 {
       margin-top: 0;
     }
-#product-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
+
+    #product-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    #cart {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px;
+      background: white;
+      height: 100vh;
+      overflow-y: auto;
+      box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+      padding: 20px;
+      z-index: 999;
+    }
+
+    #cart h2 {
+      margin-top: 0;
+    }
   </style>
 </head>
 <body>
 
   <div class="sidebar">
-  <h2>MENU</h2>
-  <a href="#">Home</a>
-  <a href="#">Fridge magnets</a>
-  <a href="#">Charms</a>
-  <a href="#">Keychains</a>
-  <a href="#">Settings</a>
-</div>
+    <h2>MENU</h2>
+    <a href="#">Home</a>
+    <a href="#">Fridge magnets</a>
+    <a href="#">Charms</a>
+    <a href="#">Keychains</a>
+    <a href="#">Settings</a>
+  </div>
 
-  <div class="main-content">
-    <h1>Welcome to CRAFTOPIA </h1>
-    
-    <h2>Trending Products</h2>
-  <div id="product-list" class="card"></div>
-  
-    <div id="cart" style="position: fixed; right: 0; top: 0; width: 300px; background: white; height: 100vh; overflow-y: auto; box-shadow: -2px 0 5px rgba(0,0,0,0.2); padding: 20px;">
-  <h2>Cart</h2>
-  <div id="cart-items"></div>
-  <h3>Total: ₹<span id="cart-total">0</span></h3>
-  <button onclick="checkout()">Checkout</button>
-</div>
+  <div class="main-content" id="main-content">
+    <!-- Content dynamically injected -->
+  </div>
 
+  <div id="cart">
+    <h2>Cart</h2>
+    <div id="cart-items"></div>
+    <h3>Total: ₹<span id="cart-total">0</span></h3>
+    <button onclick="checkout()">Checkout</button>
+  </div>
 
-<script>
-  // Load home on start
-renderHome();
-updateCartUI(); // ✅ Show cart contents if already in cart
-renderProducts("product-list"); // ✅ Show products initially
+  <script>
+    const products = [
+      // Fridge Magnets
+      { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
+      { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg", category: "fridge magnets" },
+      { id: 3, name: "Straw-berry cute fridge magnet", price: 90, image: "images/product3.jpg", category: "fridge magnets" },
+      { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg", category: "fridge magnets" },
+      { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
+      { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
+      { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
 
-const products = [
-  // Fridge Magnets
-  { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
-  { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg", category: "fridge magnets" },
-  { id: 3, name: "Straw-berry cute fridge magnet", price: 90, image: "images/product3.jpg", category: "fridge magnets" },
-  { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg", category: "fridge magnets" },
-  { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
-  { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
-  { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
+      // Charms
+      { id: 8, name: "Kitty phone charms (Light gray)", price: 100, image: "images/product8.jpg", category: "charms" },
+      { id: 9, name: "Kitty phone charms (Pink)", price: 80, image: "images/product9.jpg", category: "charms" },
+      { id: 10, name: "Strawbibi phone charms", price: 90, image: "images/product10.jpg", category: "charms" },
+      { id: 11, name: "Kitty phone charms (Dark gray)", price: 90, image: "images/product11.jpg", category: "charms" },
+      { id: 12, name: "Berryboo phone charms", price: 120, image: "images/product12.jpg", category: "charms" },
+      { id: 13, name: "Phone charms (Sky blue)", price: 80, image: "images/product13.jpg", category: "charms" },
+      { id: 14, name: "Sweet melon charms", price: 50, image: "images/product14.jpg", category: "charms" },
+      { id: 15, name: "Butterfly charms", price: 80, image: "images/product15.jpg", category: "charms" },
 
-  // Charms
-  { id: 8, name: "Kitty phone charms (Light gray)", price: 100, image: "images/product8.jpg", category: "charms" },
-  { id: 9, name: "Kitty phone charms (Pink)", price: 80, image: "images/product9.jpg", category: "charms" },
-  { id: 10, name: "Strawbibi phone charms", price: 90, image: "images/product10.jpg", category: "charms" },
-  { id: 11, name: "Kitty phone charms (Dark gray)", price: 90, image: "images/product11.jpg", category: "charms" },
-  { id: 12, name: "Berryboo phone charms", price: 120, image: "images/product12.jpg", category: "charms" },
-  { id: 13, name: "Phone charms (Sky blue)", price: 80, image: "images/product13.jpg", category: "charms" },
-  { id: 14, name: "Sweet melon charms", price: 50, image: "images/product14.jpg", category: "charms" },
-  { id: 15, name: "Butterfly charms", price: 80, image: "images/product15.jpg", category: "charms" },
+      // Keychains
+      { id: 16, name: "Doraemon key chain", price: 50, image: "images/product16.jpg", category: "keychains" },
+      { id: 17, name: "Bee happy keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
+      { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" }
+    ];
 
-  // Keychains
-  { id: 16, name: "Doraemon key chain", price: 50, image: "images/product16.jpg", category: "keychains" },
-  { id: 17, name: "Bee happy keychain", price: 50, image: "images/product17.jpg", category: "keychains" },
-  { id: 18, name: "Smiley keychain", price: 50, image: "images/product18.jpg", category: "keychains" }
-];
+    let cart = JSON.parse(localStorage.getItem("cartItems")) || [];
 
-let cart = [];
+    function renderProducts(containerId, category = null) {
+      const productList = document.getElementById(containerId);
+      productList.innerHTML = "";
+      const filtered = category ? products.filter(p => p.category === category) : products;
 
-function renderProducts(containerId, category = null) {
-  const productList = document.getElementById(containerId);
-  productList.innerHTML = "";
-  const filtered = category ? products.filter(p => p.category === category) : products;
+      filtered.forEach(product => {
+        const productCard = document.createElement("div");
+        productCard.className = "card";
+        productCard.innerHTML = `
+          <a href="${product.image}" target="_blank">
+            <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+          </a>
+          <h3>${product.name}</h3>
+          <p>Price: ₹${product.price}</p>
+          <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label>
+          <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+        productList.appendChild(productCard);
+      });
+    }
 
-  filtered.forEach(product => {
-    const productCard = document.createElement("div");
-    productCard.className = "card";
-    productCard.innerHTML = `
-      <a href="${product.image}" target="_blank">
-        <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
-      </a>
-      <h3>${product.name}</h3>
-      <p>Price: ₹${product.price}</p>
-      <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label>
-      <button onclick="addToCart(${product.id})">Add to Cart</button>
-    `;
-    productList.appendChild(productCard);
-  });
-}
+    function addToCart(productId) {
+      const qtyInput = document.getElementById(`qty-${productId}`);
+      const quantity = parseInt(qtyInput.value);
+      if (quantity < 1) return alert("Quantity must be at least 1");
 
-function addToCart(productId) {
-  const qtyInput = document.getElementById(`qty-${productId}`);
-  const quantity = parseInt(qtyInput.value);
-  if (quantity < 1) return alert("Quantity must be at least 1");
+      const product = products.find(p => p.id === productId);
+      const existing = cart.find(item => item.id === productId);
 
-  const product = products.find(p => p.id === productId);
-  const existing = cart.find(item => item.id === productId);
+      if (existing) {
+        existing.quantity += quantity;
+      } else {
+        cart.push({ ...product, quantity });
+      }
 
-  if (existing) {
-    existing.quantity += quantity;
-  } else {
-    cart.push({ ...product, quantity });
-  }
+      localStorage.setItem("cartItems", JSON.stringify(cart));
+      updateCartUI();
+    }
 
-  updateCartUI();
-}
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      localStorage.setItem("cartItems", JSON.stringify(cart));
+      updateCartUI();
+    }
 
-function removeFromCart(id) {
-  cart = cart.filter(item => item.id !== id);
-  updateCartUI();
-}
+    function updateCartUI() {
+      const cartItemsDiv = document.getElementById("cart-items");
+      const cartTotalSpan = document.getElementById("cart-total");
+      cartItemsDiv.innerHTML = "";
+      let total = 0;
 
-function updateCartUI() {
-  const cartItemsDiv = document.getElementById("cart-items");
-  const cartTotalSpan = document.getElementById("cart-total");
-  cartItemsDiv.innerHTML = "";
-  let total = 0;
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        cartItemsDiv.innerHTML += `
+          <div style="margin-bottom: 10px;">
+            <strong>${item.name}</strong><br>
+            ₹${item.price} × ${item.quantity} = ₹${subtotal}
+            <button onclick="removeFromCart(${item.id})" style="margin-left:10px;">Remove</button>
+          </div>
+        `;
+      });
 
-  cart.forEach(item => {
-    const subtotal = item.price * item.quantity;
-    total += subtotal;
-    cartItemsDiv.innerHTML += `
-      <div style="margin-bottom: 10px;">
-        <strong>${item.name}</strong><br>
-        ₹${item.price} × ${item.quantity} = ₹${subtotal}
-        <button onclick="removeFromCart(${item.id})" style="margin-left:10px;">Remove</button>
-      </div>
-    `;
-  });
+      cartTotalSpan.textContent = total;
+    }
 
-  cartTotalSpan.textContent = total;
-}
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Your cart is empty!");
+        return;
+      }
 
-function checkout() {
-  if (cart.length === 0) {
-    alert("Your cart is empty!");
-    return;
-  }
+      localStorage.setItem("cartItems", JSON.stringify(cart));
+      window.location.href = "order.html";
+    }
 
-  localStorage.setItem("cartItems", JSON.stringify(cart));
-  window.location.href = "order.html";
-}
-
-function renderHome() {
-  const mainContent = document.querySelector('.main-content');
-  mainContent.innerHTML = `
-    <h1 style="color: white;">Welcome to Craftopia</h1>
-    <h2 style="color: white;">Handmade with love ❤</h2>
-    <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
-  `;
-}
-
-// Sidebar link navigation
-document.querySelectorAll('.sidebar a').forEach(link => {
-  link.addEventListener('click', (e) => {
-    e.preventDefault();
-    const page = e.target.textContent.toLowerCase();
-    window.scrollTo(0, 0);
-
-    const mainContent = document.querySelector('.main-content');
-
-    if (page === 'home') {
-      renderHome();
-    } else {
+    function renderHome() {
+      const mainContent = document.getElementById('main-content');
       mainContent.innerHTML = `
-        <h1 style="color:white;">${e.target.textContent}</h1>
+        <h1 style="color: white;">Welcome to Craftopia</h1>
+        <h2 style="color: white;">Handmade with love ❤</h2>
+        <h3 style="color: white;">Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
         <div id="product-list" class="card"></div>
       `;
-      renderProducts("product-list", page);
+      renderProducts("product-list");
     }
-  });
-});
 
-// Load home on start
-renderHome();
-</script>
+    // Sidebar link navigation
+    document.querySelectorAll('.sidebar a').forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const page = e.target.textContent.toLowerCase();
+        window.scrollTo(0, 0);
+        const mainContent = document.getElementById('main-content');
+
+        if (page === 'home') {
+          renderHome();
+        } else {
+          mainContent.innerHTML = `<h1 style="color:white;">${e.target.textContent}</h1><div id="product-list" class="card"></div>`;
+          renderProducts("product-list", page);
+        }
+      });
+    });
+
+    // ✅ Initial Load
+    renderHome();
+    updateCartUI();
+  </script>
+
 </body>
 </html>
