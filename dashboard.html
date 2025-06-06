@@ -92,8 +92,7 @@
     { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg" },
     { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg" },
     { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg" },
-    { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg" },
-    { id: 8, name: "Product-8", price: 100, image: "images/product8.jpg" }
+    { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg" }
   ];
 
   function renderProducts(containerId) {
@@ -144,7 +143,12 @@ function renderHome() {
 if (page === 'home') {
   renderHome();
 } else if (page === 'fridge magnets') {
-  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Fridge Magnets</h1><p style="color:white;">Explore all fridge magnets here!</p>`;
+  const mainContent = document.querySelector('.main-content');
+  mainContent.innerHTML = `
+    <h1 style="color:white;">Fridge Magnets</h1>
+    <div id="product-list" class="card"></div>
+  `;
+  renderProducts("product-list");
 } else if (page === 'charms') {
   document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Charms</h1><p style="color:white;">Discover beautiful handmade charms.</p>`;
 } else if (page === 'keychains') {
