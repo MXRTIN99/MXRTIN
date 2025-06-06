@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>DASHBOAED</title>
+  <title>DASHBOARD</title>
   <style>
     body {
       margin: 0;
@@ -141,13 +141,17 @@ function renderHome() {
     link.addEventListener('click', (e) => {
       e.preventDefault();
       const page = e.target.textContent.toLowerCase();
-      if (page === 'home') renderHome();
-      else if (page === 'product') renderProductPage();
-      else if (page === 'customize') {
-        document.querySelector('.main-content').innerHTML = `<h1>Customize Page</h1><p>Customization options here...</p>`;
-      } else if (page === 'settings') {
-        document.querySelector('.main-content').innerHTML = `<h1>Settings Page</h1><p>Settings options here...</p>`;
-      }
+if (page === 'home') {
+  renderHome();
+} else if (page === 'fridge magnets') {
+  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Fridge Magnets</h1><p style="color:white;">Explore all fridge magnets here!</p>`;
+} else if (page === 'charms') {
+  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Charms</h1><p style="color:white;">Discover beautiful handmade charms.</p>`;
+} else if (page === 'keychains') {
+  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Keychains</h1><p style="color:white;">Cute and creative keychains await!</p>`;
+} else if (page === 'settings') {
+  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Settings Page</h1><p style="color:white;">Manage your preferences here.</p>`;
+}
     });
   });
 
