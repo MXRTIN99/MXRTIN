@@ -86,32 +86,39 @@
 
 <script>
   const products = [
-    { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg" },
-    { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg" },
-    { id: 3, name: "Straw-berry cute fridge magnet", price: 90, image: "images/product3.jpg" },
-    { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg" },
-    { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg" },
-    { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg" },
-    { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg" }
-  ];
+  // Fridge Magnets
+  { id: 1, name: "Froggy fridge magnets", price: 100, image: "images/product1.jpg", category: "fridge magnets" },
+  { id: 2, name: "Cute fox fridge magnet", price: 100, image: "images/product2.jpg", category: "fridge magnets" },
+  { id: 3, name: "Straw-berry cute fridge magnet", price: 90, image: "images/product3.jpg", category: "fridge magnets" },
+  { id: 4, name: "Mushmellow fridge magnet", price: 90, image: "images/product4.jpg", category: "fridge magnets" },
+  { id: 5, name: "Bee-happy fridge magnets", price: 90, image: "images/product5.jpg", category: "fridge magnets" },
+  { id: 6, name: "Oni-chan rice ball fridge magnets", price: 90, image: "images/product6.jpg", category: "fridge magnets" },
+  { id: 7, name: "Dumply dumpling fridge magnets", price: 90, image: "images/product7.jpg", category: "fridge magnets" },
 
-  function renderProducts(containerId) {
-    const productList = document.getElementById(containerId);
-    productList.innerHTML = "";
-    products.forEach(product => {
-      const productCard = document.createElement("div");
-      productCard.className = "card";
-      productCard.innerHTML = `
-        <a href="${product.image}" target="_blank">
-          <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
-        </a>
-        <h3>${product.name}</h3>
-        <p>Price: ₹${product.price}</p>
-        <button onclick="placeOrder(${product.id})">Order Now</button>
-      `;
-      productList.appendChild(productCard);
-    });
-  }
+  // Charms
+  { id: 8, name: "Star Charm", price: 80, image: "images/charms1.jpg", category: "charms" },
+  { id: 9, name: "Moonlight Charm", price: 85, image: "images/charms2.jpg", category: "charms" },
+  { id: 10, name: "Heartfelt Charm", price: 95, image: "images/charms3.jpg", category: "charms" }
+];
+
+  function renderProducts(containerId, category) {
+  const productList = document.getElementById(containerId);
+  productList.innerHTML = "";
+  const filtered = products.filter(p => p.category === category);
+  filtered.forEach(product => {
+    const productCard = document.createElement("div");
+    productCard.className = "card";
+    productCard.innerHTML = `
+      <a href="${product.image}" target="_blank">
+        <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+      </a>
+      <h3>${product.name}</h3>
+      <p>Price: ₹${product.price}</p>
+      <button onclick="placeOrder(${product.id})">Order Now</button>
+    `;
+    productList.appendChild(productCard);
+  });
+}
 
 function renderHome() {
   const mainContent = document.querySelector('.main-content');
@@ -148,13 +155,14 @@ if (page === 'home') {
     <h1 style="color:white;">Fridge Magnets</h1>
     <div id="product-list" class="card"></div>
   `;
-  renderProducts("product-list");
+  renderProducts("product-list", "fridge magnets");
 } else if (page === 'charms') {
-  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Charms</h1><p style="color:white;">Discover beautiful handmade charms.</p>`;
-} else if (page === 'keychains') {
-  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Keychains</h1><p style="color:white;">Cute and creative keychains await!</p>`;
-} else if (page === 'settings') {
-  document.querySelector('.main-content').innerHTML = `<h1 style="color:white;">Settings Page</h1><p style="color:white;">Manage your preferences here.</p>`;
+  const mainContent = document.querySelector('.main-content');
+  mainContent.innerHTML = `
+    <h1 style="color:white;">Charms</h1>
+    <div id="product-list" class="card"></div>
+  `;
+  renderProducts("product-list", "charms");
 }
     });
   });
