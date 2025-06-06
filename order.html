@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Craftopia Order</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f8f8f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    form {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    input, textarea {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <form id="orderForm">
+    <h2>Place Your Order</h2>
+
+    <label>Name:</label>
+    <input type="text" name="name" required>
+
+    <label>Email:</label>
+    <input type="email" name="email" required>
+
+    <label>Order Details:</label>
+    <textarea name="message" rows="5" required></textarea>
+
+    <button type="submit">Submit Order</button>
+  </form>
+
+  <!-- ✅ Include EmailJS library -->
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+
+  <!-- ✅ JavaScript to handle the form -->
+  <script>
+    (function() {
+      emailjs.init("X5cW5vfsYTqXzQmfQ"); // your PUBLIC KEY
+    })();
+
+    document.getElementById("orderForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
+        .then(function(response) {
+          alert("Order sent successfully! 🎉");
+        }, function(error) {
+          alert("Failed to send order 😓: " + JSON.stringify(error));
+        });
+
+      this.reset(); // Optional: clear form
+    });
+  </script>
+
+</body>
+</html>
