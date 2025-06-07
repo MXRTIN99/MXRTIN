@@ -134,7 +134,7 @@
         otp: generatedOTP
       };
 
-      emailjs.send("craftopia_xxx", "signup_otp_template", templateParams)
+      emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
         .then(() => {
           showSuccess("OTP sent to your email!");
           document.getElementById("otpSection").style.display = "block";
