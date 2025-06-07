@@ -6,7 +6,7 @@
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
     (function () {
-      emailjs.init("r9gAIst9xUQH28aSj"); // Replace with your actual public key
+      emailjs.init("r9gAIst9xUQH28aSj"); // your public key
     })();
   </script>
   <style>
@@ -32,7 +32,7 @@
 
     h1, h2 {
       text-align: center;
-      color: #fff;
+      color: black; /* ← Your original color */
     }
 
     input[type="text"],
@@ -61,7 +61,7 @@
     }
 
     #success {
-      color: lightgreen;
+      color: green;
       text-align: center;
     }
 
@@ -80,7 +80,7 @@
     }
 
     a {
-      color: lightblue;
+      color: #333;
     }
   </style>
 </head>
@@ -89,7 +89,7 @@
 <div class="signup-box">
   <h1>Welcome to CRAFTOPIA</h1>
   <h2>Sign Up</h2>
-  <form id="signupForm">
+  <form onsubmit="return sendOTP(event)">
     <input type="text" id="newUsername" placeholder="Create Username" required>
     <input type="email" id="newEmail" placeholder="Enter Email" required>
     <input type="password" id="newPassword" placeholder="Create Password" required>
@@ -110,63 +110,72 @@
 <script>
   let generatedOTP = "";
   let resendTimeout;
-  let isOtpSent = false;
 
-  document.getElementById("signupForm").addEventListener("submit", function (e) {
+  function sendOTP(e) {
     e.preventDefault();
 
-    const username = document.getElementById("newUsername").value.trim();
-    const email = document.getElementById("newEmail").value.trim();
+    const username = document.getElementById("newUsername").value;
+    const email = document.getElementById("newEmail").value;
     const password = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
-    const otpInput = document.getElementById("otpInput").value.trim();
 
     const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    if (!isOtpSent) {
-      if (users.some(user => user.username === username)) return showError("Username already taken!");
-      if (users.some(user => user.email === email)) return showError("Email already registered!");
-      if (password !== confirmPassword) return showError("Passwords do not match!");
-
-      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      const templateParams = {
-        to_email: email,
-        otp: generatedOTP
-      };
-
-      emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
-        .then(() => {
-          showSuccess("OTP sent to your email!");
-          document.getElementById("otpSection").style.display = "block";
-          document.getElementById("registerBtn").innerText = "Verify OTP & Register";
-          isOtpSent = true;
-          startResendTimer();
-        })
-        .catch(() => {
-          showError("Failed to send OTP. Try again.");
-        });
-
-    } else {
-      if (otpInput !== generatedOTP) return showError("Incorrect OTP!");
-
-      users.push({ username, email, password });
-      localStorage.setItem("users", JSON.stringify(users));
-      showSuccess("Registered successfully! Redirecting...");
-      setTimeout(() => window.location.href = "login.html", 1500);
+    if (users.some(user => user.username === username)) {
+      showError("Username already taken!");
+      return false;
     }
-  });
 
-  function resendOTP() {
-    const email = document.getElementById("newEmail").value.trim();
+    if (users.some(user => user.email === email)) {
+      showError("Email already registered!");
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      showError("Passwords do not match!");
+      return false;
+    }
+
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    const templateParams = { to_email: email, otp: generatedOTP };
 
-    emailjs.send("craftopia_xxx", "signup_otp_template", templateParams)
+    const templateParams = {
+      to_email: email,
+      otp: generatedOTP
+    };
+
+    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
       .then(() => {
-        showSuccess("OTP resent to your email!");
+        showSuccess("OTP sent to your email!");
+        document.getElementById("otpSection").style.display = "block";
+        document.getElementById("registerBtn").innerText = "Verify OTP & Register";
+        document.getElementById("registerBtn").onclick = () => {
+          return verifyOTPAndRegister(username, email, password);
+        };
         startResendTimer();
       })
-      .catch(() => showError("Failed to resend OTP."));
+      .catch(() => {
+        showError("Failed to send OTP. Try again.");
+      });
+
+    return false;
+  }
+
+  function resendOTP() {
+    const email = document.getElementById("newEmail").value;
+    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    const templateParams = {
+      to_email: email,
+      otp: generatedOTP
+    };
+
+    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
+      .then(() => {
+        showSuccess("OTP resent!");
+        startResendTimer();
+      })
+      .catch(() => {
+        showError("Resend failed. Try again.");
+      });
   }
 
   function startResendTimer() {
@@ -185,6 +194,26 @@
         resendBtn.innerText = "Resend OTP";
       }
     }, 1000);
+  }
+
+  function verifyOTPAndRegister(username, email, password) {
+    const enteredOTP = document.getElementById("otpInput").value;
+
+    if (enteredOTP !== generatedOTP) {
+      showError("Incorrect OTP!");
+      return false;
+    }
+
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+    users.push({ username, email, password });
+    localStorage.setItem("users", JSON.stringify(users));
+
+    showSuccess("Registered successfully! Redirecting...");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
+
+    return false;
   }
 
   function showError(msg) {
