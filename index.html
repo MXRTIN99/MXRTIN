@@ -148,23 +148,27 @@
     return false;
   }
 
-  function generateAndSendOTP(email) {
-    generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+function generateAndSendOTP(email) {
+  generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log("Generated OTP: " + generatedOTP); // ADD THIS
 
-    const templateParams = {
-      to_email: email,
-      otp: generatedOTP
-    };
+  const templateParams = {
+    to_email: email,
+    otp: generatedOTP
+  };
 
-    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
-      .then(() => {
-        showSuccess("OTP sent to your email!");
-        startResendTimer();
-      })
-      .catch(() => {
-        showError("Failed to send OTP. Try again.");
-      });
-  }
+  console.log("Sending OTP to:", email); // ADD THIS
+
+  emailjs.send("craftopia_xxx", "signup_otp_template", templateParams)
+    .then(() => {
+      showSuccess("OTP sent to your email!");
+      startResendTimer();
+    })
+    .catch((error) => {
+      console.error("EmailJS Error:", error); // ADD THIS
+      showError("Failed to send OTP. Try again.");
+    });
+}
 
   function resendOTP() {
     const email = document.getElementById("newEmail").value;
