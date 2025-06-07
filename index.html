@@ -9,54 +9,64 @@
       background: url('images/background.signup.login1.jpg') no-repeat center center fixed;
       background-size: cover;
       display: flex;
+      height: 100vh;
       justify-content: center;
       align-items: center;
-      height: 100vh;
     }
+
     .signup-box {
       background: rgba(255, 255, 255, 0.1);
       padding: 30px;
       border-radius: 20px;
       box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-      width: 320px;
+      width: 300px;
       backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
     }
+
     h1, h2 {
       text-align: center;
       color: black;
     }
-    input {
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="tel"] {
       width: 100%;
       padding: 10px;
       margin: 8px 0;
-      border-radius: 6px;
       border: 1px solid #ccc;
+      border-radius: 6px;
     }
+
     button {
       width: 100%;
       padding: 10px;
-      margin-top: 10px;
-      border: none;
-      background: green;
+      background: #27ae60;
       color: white;
+      border: none;
       border-radius: 6px;
       cursor: pointer;
-    }
-    button:hover {
-      background: darkgreen;
-    }
-    #otpSection {
-      display: none;
-    }
-    #error, #success {
-      text-align: center;
       margin-top: 10px;
     }
-    #error {
-      color: red;
+
+    button:hover {
+      background: #2ecc71;
     }
+
     #success {
       color: green;
+      text-align: center;
+    }
+
+    #error {
+      color: red;
+      text-align: center;
+    }
+
+    a {
+      color: #333;
     }
   </style>
 </head>
@@ -66,87 +76,66 @@
   <h1>Welcome to CRAFTOPIA</h1>
   <h2>Sign Up</h2>
   <form id="signupForm">
-    <input type="text" id="newUsername" placeholder="Create Username" required />
-    <input type="email" id="newEmail" placeholder="Enter Email" required />
-    <input type="password" id="newPassword" placeholder="Create Password" required />
-    <input type="password" id="confirmPassword" placeholder="Confirm Password" required />
-
-    <div id="otpSection">
-      <input type="text" id="otpInput" placeholder="Enter OTP" />
-    </div>
-
-    <button type="submit" id="submitBtn">Send OTP</button>
+    <input type="text" id="newUsername" placeholder="Create Username" required>
+    <input type="email" id="newEmail" placeholder="Enter Email" required>
+    <input type="tel" id="newMobile" placeholder="Enter Mobile Number" required pattern="[0-9]{10}">
+    <input type="password" id="newPassword" placeholder="Create Password" required>
+    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+    <button type="submit">Register</button>
   </form>
   <p id="success"></p>
   <p id="error"></p>
+  <p style="text-align:center;">Already registered? <a href="login.html">Login here</a></p>
 </div>
 
-<script type="module">
-  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
-
-  emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Your Public Key
-
-  let generatedOTP = "";
-
-  document.getElementById("signupForm").addEventListener("submit", async function (e) {
+<script>
+  document.getElementById("signupForm").addEventListener("submit", function (e) {
     e.preventDefault();
 
     const username = document.getElementById("newUsername").value.trim();
     const email = document.getElementById("newEmail").value.trim();
+    const mobile = document.getElementById("newMobile").value.trim();
     const password = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
-    const otpSection = document.getElementById("otpSection");
-    const btn = document.getElementById("submitBtn");
+    const users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const error = document.getElementById("error");
-    const success = document.getElementById("success");
-    error.textContent = "";
-    success.textContent = "";
-
-    if (btn.innerText === "Send OTP") {
-      if (!username || !email || !password || !confirmPassword) {
-        error.textContent = "Please fill all fields.";
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        error.textContent = "Passwords do not match.";
-        return;
-      }
-
-      // Generate OTP
-      generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-      console.log("Generated OTP:", generatedOTP);
-
-      // Send email
-      try {
-        await emailjs.send("craftopia_xxx", "craftopiasignup_template", {
-          to_email: email,
-          otp: generatedOTP,
-          name: username,
-        });
-        success.textContent = "OTP sent to your email.";
-        otpSection.style.display = "block";
-        btn.innerText = "Verify OTP & Register";
-      } catch (err) {
-        console.error("EmailJS Error:", err);
-        error.textContent = "Failed to send OTP.";
-      }
-    } else {
-      const enteredOTP = document.getElementById("otpInput").value.trim();
-      if (enteredOTP === generatedOTP) {
-        const users = JSON.parse(localStorage.getItem("users")) || [];
-        users.push({ username, email, password });
-        localStorage.setItem("users", JSON.stringify(users));
-        success.textContent = "Registration successful!";
-        setTimeout(() => {
-          window.location.href = "login.html";
-        }, 1500);
-      } else {
-        error.textContent = "Incorrect OTP.";
-      }
+    if (!username || !email || !mobile || !password || !confirmPassword) {
+      showError("Please fill all fields.");
+      return;
     }
+
+    if (password !== confirmPassword) {
+      showError("Passwords do not match.");
+      return;
+    }
+
+    if (users.some(user => user.username === username)) {
+      showError("Username already taken.");
+      return;
+    }
+
+    if (users.some(user => user.email === email)) {
+      showError("Email already registered.");
+      return;
+    }
+
+    users.push({ username, email, mobile, password });
+    localStorage.setItem("users", JSON.stringify(users));
+    showSuccess("Registered successfully! Redirecting...");
+    setTimeout(() => {
+      window.location.href = "login.html";
+    }, 1500);
   });
+
+  function showError(msg) {
+    document.getElementById("error").innerText = msg;
+    document.getElementById("success").innerText = "";
+  }
+
+  function showSuccess(msg) {
+    document.getElementById("success").innerText = msg;
+    document.getElementById("error").innerText = "";
+  }
 </script>
 
 </body>
