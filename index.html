@@ -3,12 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>Sign Up</title>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-  <script>
-    (function () {
-      emailjs.init("r9gAIst9xUQH28aSj"); // Your public key
-    })();
-  </script>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -107,6 +101,12 @@
   <p style="text-align:center;">Already registered? <a href="login.html">Login here</a></p>
 </div>
 
+<!-- EMAILJS SDK -->
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  emailjs.init("r9gAIst9xUQH28aSj");
+</script>
+
 <script>
   let generatedOTP = "";
   let resendTimeout;
@@ -114,6 +114,7 @@
   document.getElementById("signupForm").addEventListener("submit", function (e) {
     e.preventDefault();
     const btn = document.getElementById("registerBtn");
+
     if (btn.innerText === "Send OTP") {
       sendOTP();
     } else {
@@ -125,12 +126,16 @@
   });
 
   function sendOTP() {
-    const username = document.getElementById("newUsername").value;
-    const email = document.getElementById("newEmail").value;
+    const username = document.getElementById("newUsername").value.trim();
+    const email = document.getElementById("newEmail").value.trim();
     const password = document.getElementById("newPassword").value;
     const confirmPassword = document.getElementById("confirmPassword").value;
-
     const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (!username || !email || !password || !confirmPassword) {
+      showError("Please fill all fields.");
+      return;
+    }
 
     if (users.some(user => user.username === username)) {
       showError("Username already taken!");
@@ -148,6 +153,7 @@
     }
 
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log("Generated OTP:", generatedOTP); // for debug
 
     const templateParams = {
       to_email: email,
@@ -165,15 +171,14 @@
         startResendTimer();
       })
       .catch((error) => {
-        showError("Failed to send OTP. Check console.");
         console.error("EmailJS Error:", error);
+        showError("Failed to send OTP. Check console.");
       });
   }
 
   function resendOTP() {
     const email = document.getElementById("newEmail").value;
     const username = document.getElementById("newUsername").value;
-
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
     const templateParams = {
@@ -186,7 +191,7 @@
 
     emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
       .then(() => {
-        showSuccess("OTP resent!");
+        showSuccess("OTP resent to your email!");
         startResendTimer();
       })
       .catch(() => {
