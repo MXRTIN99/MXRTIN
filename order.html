@@ -112,7 +112,9 @@
           localStorage.removeItem("cart");
           form.reset();
         }, (error) => {
-          alert("Failed to send order: " + error);
+          console.error("EmailJS Error:", error);
+alert("Failed to send order:\n" + JSON.stringify(error));
+
         });
     });
   });
