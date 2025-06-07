@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Craftopia Order</title>
   <style>
     body {
@@ -10,27 +10,50 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
     form {
       background: white;
       padding: 30px;
       border-radius: 10px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 450px;
+      width: 100%;
+      box-sizing: border-box;
     }
-    input, textarea {
+    label {
+      font-weight: 600;
+      margin-bottom: 6px;
+      display: block;
+    }
+    input, textarea, select {
       width: 100%;
       margin-bottom: 15px;
       padding: 10px;
       font-size: 16px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      resize: none;
+      font-family: inherit;
+    }
+    textarea[readonly] {
+      background: #eee;
+      color: #555;
+      cursor: not-allowed;
     }
     button {
-      padding: 10px 20px;
+      padding: 12px 20px;
       background-color: #007bff;
       color: white;
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 16px;
+      width: 100%;
+      transition: background-color 0.3s ease;
     }
     button:hover {
       background-color: #0056b3;
@@ -42,57 +65,85 @@
   <form id="orderForm">
     <h2>Place Your Order</h2>
 
-    <label>Name:</label>
-    <input type="text" name="name" required>
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required placeholder="Your full name" />
 
-    <label>Email:</label>
-    <input type="email" name="email" required>
+    <label for="mobile">Mobile Number:</label>
+    <input type="tel" id="mobile" name="mobile" required placeholder="e.g. 9876543210" pattern="[0-9]{10}" title="Enter a 10-digit mobile number" />
 
-    <label>Order Details:</label>
-    <textarea name="message" rows="5" required></textarea>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required placeholder="you@example.com" />
+
+    <label for="address">Address:</label>
+    <textarea id="address" name="address" rows="3" required placeholder="Your full address"></textarea>
+
+    <label for="payment">Payment Method:</label>
+    <select id="payment" name="payment" required>
+      <option value="" disabled selected>Select a payment method</option>
+      <option value="Cash on Delivery">Cash on Delivery</option>
+      <option value="UPI">UPI</option>
+      <option value="Credit/Debit Card">Credit/Debit Card</option>
+      <option value="Net Banking">Net Banking</option>
+    </select>
+
+    <label for="message">Order Details:</label>
+    <textarea id="message" name="message" rows="6" readonly></textarea>
 
     <button type="submit">Submit Order</button>
   </form>
 
-  <!-- ✅ Include EmailJS library -->
+  <!-- Include EmailJS library -->
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 
-<script>
-  window.onload = function () {
-    const cartData = JSON.parse(localStorage.getItem("cartItems"));
-    const messageBox = document.querySelector("textarea[name='message']");
+  <script>
+    window.onload = function () {
+      const cartData = JSON.parse(localStorage.getItem("cartItems"));
+      const messageBox = document.getElementById("message");
 
-    if (cartData && cartData.length > 0 && messageBox) {
-      let orderText = "";
-      let total = 0;
+      if (cartData && cartData.length > 0 && messageBox) {
+        let orderText = "";
+        let total = 0;
 
-      cartData.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        orderText += `${item.name} - ₹${item.price} × ${item.quantity} = ₹${itemTotal}\n`;
-        total += itemTotal;
-      });
+        cartData.forEach(item => {
+          const itemTotal = item.price * item.quantity;
+          orderText += `${item.name} - ₹${item.price} × ${item.quantity} = ₹${itemTotal}\n`;
+          total += itemTotal;
+        });
 
-      orderText += `\nTotal: ₹${total}`;
-      messageBox.value = orderText;
-    }
-  };
+        orderText += `\nTotal: ₹${total}`;
+        messageBox.value = orderText;
+      } else {
+        messageBox.value = "Your cart is empty.";
+      }
+    };
 
-  (function() {
-    emailjs.init("X5cW5vfsYTqXzQmfQ"); // ✅ your public key
-  })();
+    (function() {
+      emailjs.init("X5cW5vfsYTqXzQmfQ"); // your public key here
+    })();
 
-  document.getElementById("orderForm").addEventListener("submit", function(event) {
-    event.preventDefault();
+    document.getElementById("orderForm").addEventListener("submit", function(event) {
+      event.preventDefault();
 
-    emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
-      .then(function(response) {
-        alert("Order sent successfully! 🎉");
-        localStorage.removeItem("cartItems"); // ✅ clear cart after sending
-        document.getElementById("orderForm").reset();
-      }, function(error) {
-        alert("Failed to send order 😓: " + JSON.stringify(error));
-      });
-  });
-</script>
+      // Basic validation for mobile number length
+      const mobileInput = document.getElementById("mobile");
+      if (!/^\d{10}$/.test(mobileInput.value)) {
+        alert("Please enter a valid 10-digit mobile number.");
+        mobileInput.focus();
+        return;
+      }
+
+      emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
+        .then(function(response) {
+          alert("Order sent successfully! 🎉");
+          localStorage.removeItem("cartItems"); // clear cart after sending
+          document.getElementById("orderForm").reset();
+          // Optionally, redirect to homepage or thank you page:
+          // window.location.href = "index.html";
+        }, function(error) {
+          alert("Failed to send order 😓: " + JSON.stringify(error));
+        });
+    });
+  </script>
+
 </body>
 </html>
