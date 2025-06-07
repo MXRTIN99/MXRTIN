@@ -1,13 +1,11 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Sign Up</title>
-  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script>
-    (function () {
-      emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Your correct Public Key
-    })();
+    emailjs.init("r9gAIst9xUQH28aSj");
   </script>
   <style>
     body {
@@ -151,10 +149,13 @@
 
     const templateParams = {
       to_email: email,
-      otp: generatedOTP
+      otp: generatedOTP,
+      title: "Craftopia OTP Verification",
+      name: username,
+      email: email
     };
 
-    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams) // ✅ Using correct Service & Template ID
+    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
       .then(() => {
         showSuccess("OTP sent to your email!");
         document.getElementById("otpSection").style.display = "block";
@@ -168,10 +169,14 @@
 
   function resendOTP() {
     const email = document.getElementById("newEmail").value;
+    const username = document.getElementById("newUsername").value;
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
     const templateParams = {
       to_email: email,
-      otp: generatedOTP
+      otp: generatedOTP,
+      title: "Craftopia OTP Verification (Resent)",
+      name: username,
+      email: email
     };
 
     emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams)
