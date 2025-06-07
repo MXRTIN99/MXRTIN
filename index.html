@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Sign Up</title>
   <style>
     body {
@@ -90,7 +90,7 @@
     <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
 
     <div id="otpSection" style="display:none;">
-      <input type="text" id="otpInput" placeholder="Enter OTP"> <!-- FIXED: removed required -->
+      <input type="text" id="otpInput" placeholder="Enter OTP">
       <button type="button" id="resendBtn" onclick="resendOTP()" disabled>Resend OTP (30s)</button>
     </div>
 
@@ -101,13 +101,11 @@
   <p style="text-align:center;">Already registered? <a href="login.html">Login here</a></p>
 </div>
 
-<!-- EMAILJS SDK -->
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
+<script type="module">
+  import emailjs from 'https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js';
   emailjs.init("r9gAIst9xUQH28aSj");
-</script>
+  window.emailjs = emailjs;
 
-<script>
   let generatedOTP = "";
   let resendTimeout;
 
@@ -153,7 +151,7 @@
     }
 
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
-    console.log("Generated OTP:", generatedOTP); // for debug
+    console.log("Generated OTP:", generatedOTP);
 
     const templateParams = {
       to_email: email,
