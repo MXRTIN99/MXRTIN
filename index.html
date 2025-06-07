@@ -1,11 +1,13 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Sign Up</title>
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
-    emailjs.init("r9gAIst9xUQH28aSj");
+    (function () {
+      emailjs.init("r9gAIst9xUQH28aSj"); // Your public key
+    })();
   </script>
   <style>
     body {
@@ -150,7 +152,7 @@
     const templateParams = {
       to_email: email,
       otp: generatedOTP,
-      title: "Craftopia OTP Verification",
+      title: "Craftopia Signup OTP",
       name: username,
       email: email
     };
@@ -162,19 +164,22 @@
         document.getElementById("registerBtn").innerText = "Verify OTP & Register";
         startResendTimer();
       })
-      .catch(() => {
-        showError("Failed to send OTP. Try again.");
+      .catch((error) => {
+        showError("Failed to send OTP. Check console.");
+        console.error("EmailJS Error:", error);
       });
   }
 
   function resendOTP() {
     const email = document.getElementById("newEmail").value;
     const username = document.getElementById("newUsername").value;
+
     generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
     const templateParams = {
       to_email: email,
       otp: generatedOTP,
-      title: "Craftopia OTP Verification (Resent)",
+      title: "Craftopia Signup OTP (Resend)",
       name: username,
       email: email
     };
