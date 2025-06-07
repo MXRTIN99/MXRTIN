@@ -1,3 +1,4 @@
+<!-- Save as order.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -75,7 +76,7 @@
   </select>
 
   <!-- Hidden order summary field -->
-  <textarea id="message" name="order_summary" style="display:none;"></textarea>
+  <textarea id="message" name="order_summary" style="display:none;" readonly></textarea>
 
   <button type="submit">Submit Order</button>
 </form>
@@ -89,7 +90,7 @@
     const form = document.getElementById("order-form");
     const messageField = document.getElementById("message");
 
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
+    const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
     let orderSummary = "";
     let total = 0;
 
@@ -101,7 +102,6 @@
 
     orderSummary += `\nTotal Amount: ₹${total}`;
     messageField.value = orderSummary;
-    messageField.readOnly = true;
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -109,12 +109,11 @@
       emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
         .then(() => {
           alert("Order submitted successfully!");
-          localStorage.removeItem("cart");
+          localStorage.removeItem("cartItems");
           form.reset();
         }, (error) => {
           console.error("EmailJS Error:", error);
-alert("Failed to send order:\n" + JSON.stringify(error));
-
+          alert("Failed to send order:\n" + JSON.stringify(error));
         });
     });
   });
