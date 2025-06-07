@@ -6,7 +6,7 @@
   <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
   <script>
     (function () {
-      emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Replace with your correct Public Key
+      emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Your correct Public Key
     })();
   </script>
   <style>
@@ -154,7 +154,7 @@
       otp: generatedOTP
     };
 
-    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams) // ✅ Replace with correct values
+    emailjs.send("craftopia_xxx", "craftopiasignup_template", templateParams) // ✅ Using correct Service & Template ID
       .then(() => {
         showSuccess("OTP sent to your email!");
         document.getElementById("otpSection").style.display = "block";
