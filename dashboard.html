@@ -5,22 +5,17 @@
   <title>Craftopia Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-
+    html { scroll-behavior: smooth; }
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
       background-color: #f4f4f4;
       transition: background 0.3s, color 0.3s;
     }
-
     .dark-mode {
       background-color: #1e1e1e;
       color: #f1f1f1;
     }
-
     .sidebar {
       height: 100vh;
       width: 200px;
@@ -32,12 +27,7 @@
       color: white;
       z-index: 2;
     }
-
-    .sidebar h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
+    .sidebar h2 { text-align: center; margin-bottom: 20px; }
     .sidebar a {
       display: block;
       padding: 15px;
@@ -46,11 +36,7 @@
       transition: background 0.3s;
       cursor: pointer;
     }
-
-    .sidebar a:hover {
-      background-color: #34495e;
-    }
-
+    .sidebar a:hover { background-color: #34495e; }
     .toggle-dark {
       display: block;
       margin: 10px auto;
@@ -62,7 +48,6 @@
       cursor: pointer;
       border-radius: 4px;
     }
-
     .main-content {
       margin-left: 200px;
       padding: 30px;
@@ -73,7 +58,6 @@
       background-repeat: no-repeat;
       color: white;
     }
-
     .card {
       background-color: rgba(255, 255, 255, 0.85);
       border-radius: 8px;
@@ -82,17 +66,12 @@
       margin-bottom: 20px;
       color: black;
     }
-
-    .card h3 {
-      margin-top: 0;
-    }
-
+    .card h3 { margin-top: 0; }
     #product-list {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 20px;
     }
-
     #cart-icon {
       position: fixed;
       top: 15px;
@@ -108,14 +87,8 @@
       justify-content: center;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       cursor: pointer;
-      z-index: 4;
-      transition: transform 0.3s ease-in-out;
+      z-index: 5;
     }
-
-    #cart-icon:hover {
-      transform: scale(1.1);
-    }
-
     #cart-count {
       position: absolute;
       top: -5px;
@@ -131,7 +104,6 @@
       align-items: center;
       justify-content: center;
     }
-
     #cart {
       position: fixed;
       right: -320px;
@@ -143,24 +115,18 @@
       padding: 20px;
       overflow-y: auto;
       transition: right 0.4s ease;
-      z-index: 3;
+      z-index: 4;
       color: black;
     }
-
-    #cart.show {
-      right: 0;
-    }
-
+    #cart.show { right: 0; }
     .dark-mode .main-content {
       background-image: none;
       background-color: #111;
     }
-
     .dark-mode .card {
       background-color: rgba(50, 50, 50, 0.9);
       color: white;
     }
-
     .dark-mode #cart {
       background: #222;
       color: white;
@@ -186,8 +152,7 @@
   </div>
 
   <div id="cart-icon">
-    🛒
-    <div id="cart-count">0</div>
+    🛒<div id="cart-count">0</div>
   </div>
 
   <div id="cart">
@@ -227,16 +192,16 @@
     const filtered = category ? products.filter(p => p.category === category) : products;
 
     filtered.forEach(product => {
-      const productCard = document.createElement("div");
-      productCard.className = "card";
-      productCard.innerHTML = `
-        <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius: 8px; margin-bottom: 10px;">
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerHTML = `
+        <img src="${product.image}" alt="${product.name}" style="width:100%; border-radius:8px; margin-bottom:10px;">
         <h3>${product.name}</h3>
         <p>Price: ₹${product.price}</p>
         <label>Qty: <input type="number" id="qty-${product.id}" value="1" min="1" style="width:50px;"></label><br>
         <button onclick="addToCart(${product.id})">Add to Cart</button>
       `;
-      productList.appendChild(productCard);
+      productList.appendChild(card);
     });
   }
 
@@ -248,13 +213,11 @@
     const product = products.find(p => p.id === productId);
     const existing = cart.find(item => item.id === productId);
 
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      cart.push({ ...product, quantity });
-    }
+    if (existing) existing.quantity += quantity;
+    else cart.push({ ...product, quantity });
 
     updateCartUI();
+    document.getElementById("cart").classList.add("show");
   }
 
   function removeFromCart(id) {
@@ -267,15 +230,14 @@
     const cartTotalSpan = document.getElementById("cart-total");
     const cartCount = document.getElementById("cart-count");
     cartItemsDiv.innerHTML = "";
-    let total = 0;
-    let itemCount = 0;
+    let total = 0, count = 0;
 
     cart.forEach(item => {
       const subtotal = item.price * item.quantity;
       total += subtotal;
-      itemCount += item.quantity;
+      count += item.quantity;
       cartItemsDiv.innerHTML += `
-        <div style="margin-bottom: 10px;">
+        <div style="margin-bottom:10px;">
           <strong>${item.name}</strong><br>
           ₹${item.price} × ${item.quantity} = ₹${subtotal}
           <button onclick="removeFromCart(${item.id})">Remove</button>
@@ -284,35 +246,30 @@
     });
 
     cartTotalSpan.textContent = total;
-    cartCount.textContent = itemCount;
-  }
-
-  function toggleCart() {
-    document.getElementById("cart").classList.add("show");
-  }
-
-  function closeCartOnClickOutside(event) {
-    const cart = document.getElementById("cart");
-    const cartIcon = document.getElementById("cart-icon");
-    if (!cart.contains(event.target) && !cartIcon.contains(event.target)) {
-      cart.classList.remove("show");
-    }
-  }
-
-  document.addEventListener("click", closeCartOnClickOutside);
-
-  function checkout() {
-    if (cart.length === 0) {
-      alert("Your cart is empty!");
-      return;
-    }
-    localStorage.setItem("cartItems", JSON.stringify(cart));
-    window.location.href = "order.html";
+    cartCount.textContent = count;
   }
 
   function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
   }
+
+  function checkout() {
+    if (cart.length === 0) return alert("Cart is empty!");
+    localStorage.setItem("cartItems", JSON.stringify(cart));
+    window.location.href = "order.html";
+  }
+
+  document.getElementById("cart-icon").addEventListener("click", e => {
+    e.stopPropagation();
+    document.getElementById("cart").classList.add("show");
+  });
+
+  document.addEventListener("click", e => {
+    const cart = document.getElementById("cart");
+    if (!cart.contains(e.target) && e.target.id !== "cart-icon" && !e.target.closest('#cart-icon')) {
+      cart.classList.remove("show");
+    }
+  });
 
   document.querySelectorAll('.sidebar a').forEach(link => {
     link.addEventListener('click', (e) => {
@@ -328,10 +285,7 @@
           <h3>Keychains, resin art, fridge magnets, lippan arts, macrame</h3>
         `;
       } else {
-        mainContent.innerHTML = `
-          <h1>${e.target.textContent}</h1>
-          <div id="product-list" class="card"></div>
-        `;
+        mainContent.innerHTML = `<h1>${e.target.textContent}</h1><div id="product-list" class="card"></div>`;
         renderProducts("product-list", page);
       }
     });
