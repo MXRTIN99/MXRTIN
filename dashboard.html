@@ -185,7 +185,7 @@
     <div id="product-list" class="card"></div>
   </div>
 
-  <div id="cart-icon">
+  <div id="cart-icon" onclick="toggleCart()">
     🛒
     <div id="cart-count">0</div>
   </div>
@@ -288,7 +288,8 @@
   }
 
   function toggleCart() {
-    document.getElementById("cart").classList.add("show");
+    const cartDiv = document.getElementById("cart");
+    cartDiv.classList.toggle("show");
   }
 
   function closeCartOnClickOutside(event) {
