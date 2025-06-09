@@ -1,4 +1,3 @@
-<!-- Save as order.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -83,7 +82,7 @@
 
 <script>
   (function () {
-    emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Your EmailJS Public Key
+    emailjs.init("r9gAIst9xUQH28aSj"); // ✅ Your EmailJS public key
   })();
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -91,16 +90,21 @@
     const messageField = document.getElementById("message");
 
     const cart = JSON.parse(localStorage.getItem("cartItems")) || [];
-    let orderSummary = "";
+    let orderSummary = "🛍️ CRAFTOPIA ORDER DETAILS\n--------------------------\n";
     let total = 0;
 
-    cart.forEach(item => {
-      const subtotal = item.price * item.quantity;
-      total += subtotal;
-      orderSummary += `${item.name} - ₹${item.price} × ${item.quantity} = ₹${subtotal}\n`;
-    });
+    if (cart.length === 0) {
+      orderSummary += "No items in cart.\n";
+    } else {
+      cart.forEach(item => {
+        const subtotal = item.price * item.quantity;
+        total += subtotal;
+        orderSummary += `• ${item.name}\n  ₹${item.price} × ${item.quantity} = ₹${subtotal}\n`;
+      });
+      orderSummary += "--------------------------\n";
+      orderSummary += `Total Amount: ₹${total}`;
+    }
 
-    orderSummary += `\nTotal Amount: ₹${total}`;
     messageField.value = orderSummary;
 
     form.addEventListener("submit", function (e) {
@@ -108,12 +112,13 @@
 
       emailjs.sendForm("craftopia_xxx", "craftopia_template", this)
         .then(() => {
-          alert("Order submitted successfully!");
+          alert("✅ Order submitted successfully!");
           localStorage.removeItem("cartItems");
           form.reset();
+          window.location.href = "dashboard.html"; // You can redirect wherever you want
         }, (error) => {
           console.error("EmailJS Error:", error);
-          alert("Failed to send order:\n" + JSON.stringify(error));
+          alert("❌ Failed to send order:\n" + JSON.stringify(error));
         });
     });
   });
